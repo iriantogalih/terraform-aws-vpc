@@ -7,7 +7,7 @@ resource "aws_vpc" "project1_VPC" {
   cidr_block = "10.0.0.0/16"
 
   tags = {
-    Name = "main_VPC"
+    Name = "project1_VPC"
   }
 }
 
@@ -39,4 +39,35 @@ resource "aws_internet_gateway" "project1_gw" {
   }
 }
 
+resource "aws_route_table" "project1_private_RT" {
+  vpc_id     = "${aws_vpc.project1_VPC.id}"
 
+  tags = {
+    Name = "private route table"
+  }
+}
+
+resource "aws_route_table" "project1_public_RT" {
+  vpc_id     = "${aws_vpc.project1_VPC.id}"
+
+  route {
+    cidr_block = "0.0.0.0/0"
+    gateway_id = "${aws_internet_gateway.project1_gw.id}"    
+  }
+
+  
+
+  tags = {
+    Name = "public route table"
+  }
+}
+
+resource "aws_route_table_association" "project1_private_RT_association" {
+  subnet_id      = "${aws_subnet.project1_privatesubnet.id}"
+  route_table_id = "${aws_route_table.project1_private_RT.id}"
+}
+
+resource "aws_route_table_association" "project1_public_RT_association" {
+  subnet_id      = "${aws_subnet.project1_publicsubnet.id}"
+  route_table_id = "${aws_route_table.project1_public_RT.id}"
+}
