@@ -68,7 +68,7 @@ resource "aws_eip" "nat_gw" {
 }
 
 resource "aws_nat_gateway" "project1_ngw" {
-  subnet_id = "${aws_subnet.project1_privatesubnet.id}"  
+  subnet_id = "${aws_subnet.project1_publicsubnet.id}"  
   allocation_id = aws_eip.nat_gw.id
 
   tags = {
