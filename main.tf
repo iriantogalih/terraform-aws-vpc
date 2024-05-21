@@ -11,4 +11,23 @@ resource "aws_vpc" "project1_VPC" {
   }
 }
 
+resource "aws_subnet" "project1_privatesubnet" {
+  vpc_id     = "${aws_vpc.project1_VPC.id}"
+  cidr_block = "10.0.1.0/24"
+  availability_zone = "ap-southeast-1a"
+
+  tags = {
+    Name = "Private Subnet"
+  }
+}
+
+resource "aws_subnet" "project1_publicsubnet" {
+  vpc_id     = "${aws_vpc.project1_VPC.id}"
+  cidr_block = "10.0.2.0/24"
+  availability_zone = "ap-southeast-1a"
+
+  tags = {
+    Name = "Public Subnet"
+  }
+}
 
