@@ -93,7 +93,8 @@ resource "aws_instance" "ec2_public_example" {
     ami = "ami-003c463c8207b4dfa"  
     instance_type = var.instance_type
     key_name = "aws-demo-key"
-    vpc_security_group_ids = [aws_security_group.public_sg.id]
+    vpc_id =   aws_vpc.project1_VPC.id
+    vpc_security_group_ids = [aws_security_group.public_sg.id]    
     subnet_id = aws_subnet.project1_publicsubnet.id     
     associate_public_ip_address = var.enable_public
 
@@ -107,7 +108,8 @@ resource "aws_instance" "ec2_private_example" {
     ami = "ami-003c463c8207b4dfa"  
     instance_type = var.instance_type
     key_name = "aws-demo-key"
-    vpc_security_group_ids = [aws_security_group.private_SG.id]
+    vpc_id =   aws_vpc.project1_VPC.id
+    vpc_security_group_ids = [aws_security_group.private_SG.id]    
     subnet_id = aws_subnet.project1_privatesubnet.id 
     //count = var.instance_count
     associate_public_ip_address = false
@@ -148,7 +150,7 @@ resource "aws_security_group" "private_SG" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"   
-    cidr_blocks =["0.0.0.0/0"]
+    cidr_blocks = aws_subnet.project1_privatesubnet.cidr_block
   }
 
    tags = {
@@ -165,7 +167,7 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
 
 resource "aws_key_pair" "project1_key" {
   key_name   = "aws-demo-key"
-  public_key = tls_private_key.ras.public_key_openssh
+  public_key = tls_private_key.rsa.public_key_openssh
 }
 
 resource "tls_private_key" "rsa" {
