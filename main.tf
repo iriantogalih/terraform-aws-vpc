@@ -163,7 +163,17 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
 }
 
 
-resource "aws_key_pair" "deployer" {
+resource "aws_key_pair" "project1_key" {
   key_name   = "aws-demo-key"
-  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCmSKz+QIYx1eHJYBbb6/KIr015ebJPyhxV5FDVxMSBt0T6rEWTg6b7hBygUwyeDHDkPN7CA6bJXBJnPW0uwqLSn2Bb7RVHHG+F5muI0HUCgrDWDe10OeHiwCW0icbgBrnlWm6xY/yJElLmNC0fJGYi2I2I7ag56rnREtvHKKY7GpV2IuaF33BVXhQO1O8fE6ty9J9gtrvOs8iYvw2j9Ks0cwQ3wMUf//b1HgPtmy5tn1seXaxagiA62/J5K85PfgZjR32BtSuLg/0gxBAdENhPbPhanBuX5Jt9mJTLM4vbqsMK34GeXGUwsrEqXE3GsAXThVK+Hqiw+hlRxv8xB1Xv galih@galihisaputro"
+  public_key = tls_private_key.ras.public_key_openssh
+}
+
+resource "tls_private_key" "rsa" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "local_file" "private_key" {
+  content  = tls_private_key.rsa.private_key_pem
+  filename = "aws-demo-key.pem"
 }
