@@ -31,3 +31,12 @@ resource "aws_subnet" "project1_publicsubnet" {
   }
 }
 
+resource "aws_internet_gateway" "project1_gw" {
+  vpc_id = "${aws_vpc.project1_VPC.id}"
+
+  tags = {
+    Name = "main igw"
+  }
+}
+
+
