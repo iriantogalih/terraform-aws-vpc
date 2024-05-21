@@ -9,3 +9,7 @@ output "my_ip_private_public_EC2" {
 output "my_ip_private_private_EC2" {
   value = aws_instance.ec2_private_example.private_ip 
 }
+
+output "nat_gateway_ip" {
+  value = aws_eip.nat_gw.public_ip
+}
