@@ -116,12 +116,14 @@ resource "aws_route_table_association" "project1_public_RT_association" {
 resource "aws_instance" "ec2_public_example" {
     
     ami = var.ami_windows  
-    instance_type = var.instance_type
-    key_name = "aws-demo-key"
-    
+    instance_type = "t2.medium"
+    key_name = "aws-demo-key"    
     vpc_security_group_ids = [aws_security_group.public_sg.id]    
     subnet_id = aws_subnet.project1_publicsubnet.id     
     associate_public_ip_address = var.enable_public
+    //iam_instance_profile = var.iam_instance_profile
+     iam_instance_profile = "${aws_iam_instance_profile.test_profile.name}"
+    
 
     tags = {
       Name = "Public EC2"
