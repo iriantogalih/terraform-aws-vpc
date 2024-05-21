@@ -15,7 +15,14 @@ locals {
   {
     port = 433
     description = "Ingress rule for port 433"
-  }]
+  },
+  {
+    port = 3389
+    description = "Ingress rule for port 3389"
+  }
+  
+  
+  ]
 }
 
 
@@ -108,7 +115,7 @@ resource "aws_route_table_association" "project1_public_RT_association" {
 
 resource "aws_instance" "ec2_public_example" {
     
-    ami = "ami-003c463c8207b4dfa"  
+    ami = var.ami_windows  
     instance_type = var.instance_type
     key_name = "aws-demo-key"
     
@@ -123,7 +130,7 @@ resource "aws_instance" "ec2_public_example" {
 
 resource "aws_instance" "ec2_private_example" {
     
-    ami = "ami-003c463c8207b4dfa"  
+    ami = var.ami_linux
     instance_type = var.instance_type
     key_name = "aws-demo-key"
     
