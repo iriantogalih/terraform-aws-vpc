@@ -22,3 +22,8 @@ variable "ami_windows" {
     type=string
     default =  "ami-048154cf4850e4efd"  
 }
+
+variable "iam_instance_profile"{
+    type = string
+    default = "ec2-s3-access"
+}
