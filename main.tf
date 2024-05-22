@@ -3,6 +3,10 @@ provider "aws" {
   region     = "ap-southeast-1"  
 } 
 
+# 
+    Create local for map port in ec2 security group
+# 
+
 locals {
   ingress_rule = [{
     port = 80
@@ -25,7 +29,9 @@ locals {
   ]
 }
 
-
+# 
+    Create VPC
+# 
 resource "aws_vpc" "project1_VPC" {
   cidr_block = "10.0.0.0/16"
 
@@ -33,6 +39,10 @@ resource "aws_vpc" "project1_VPC" {
     Name = "project1_VPC"
   }
 }
+
+# 
+    Create subnet private and public
+# 
 
 resource "aws_subnet" "project1_privatesubnet" {
   vpc_id     = "${aws_vpc.project1_VPC.id}"
@@ -54,6 +64,10 @@ resource "aws_subnet" "project1_publicsubnet" {
   }
 }
 
+# 
+    Create Internet Gateway
+# 
+
 resource "aws_internet_gateway" "project1_gw" {
   vpc_id = "${aws_vpc.project1_VPC.id}"
 
@@ -62,6 +76,9 @@ resource "aws_internet_gateway" "project1_gw" {
   }
 }
 
+# 
+    Create elasticIP for nat gateweay
+# 
 resource "aws_eip" "nat_gw" {
   depends_on = [aws_internet_gateway.project1_gw]
   
@@ -75,6 +92,10 @@ resource "aws_nat_gateway" "project1_ngw" {
     Name = "main  nat_gw"
   }
 }
+
+# 
+    Create route table for connectiong subnet with local server and IGW and NAT GW
+# 
 
 resource "aws_route_table" "project1_private_RT" {
   vpc_id     = "${aws_vpc.project1_VPC.id}"
@@ -113,6 +134,11 @@ resource "aws_route_table_association" "project1_public_RT_association" {
   route_table_id = "${aws_route_table.project1_public_RT.id}"
 }
 
+
+# 
+    Create EC2 instance_count
+# 
+
 resource "aws_instance" "ec2_public_example" {
     
     ami = var.ami_windows  
@@ -145,6 +171,10 @@ resource "aws_instance" "ec2_private_example" {
       Name = "private EC2"
     } 
 }
+
+# 
+    Create Security Group
+# 
 
 resource "aws_security_group" "public_sg" {
    name        = "allow_tls"
@@ -191,6 +221,9 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv4" {
   ip_protocol       = "-1" # semantically equivalent to all ports
 }
 
+# 
+    setting resources for crate aws key pair and download it in local directory
+# 
 
 resource "aws_key_pair" "project1_key" {
   key_name   = "aws-demo-key"
